@@ -149,6 +149,7 @@ class dump:
 		try:
 			target_id = input('Input Id Target : ')
 			type_dump = input('Infinity Dump !, y/t ? : ')
+			print('Tekan Ctrl+C Untuk Berhenti Dump !')
 			get = requests.get('https://graph.facebook.com/%s?fields=friends&access_token=%s'%(target_id, self.token_eaat), cookies=self.cookie).json()
 			for x in get['friends']['data']:
 				try:
@@ -157,7 +158,6 @@ class dump:
 					open('DATA/result/%s.text'%(target_id),'a').write(user_id+'|'+user_name+'\n')
 					print('\rSucces Dump %s User '%(len(id_publik)),end='')
 				except:pass
-
 			if type_dump in ['y','1']:
 				while True:
 					try:
@@ -171,11 +171,24 @@ class dump:
 									id_publik.append(user_id)
 									open('DATA/result/%s.text'%(target_id),'a').write(user_id+'|'+user_name+'\n')
 									print('\rSucces Dump %s User '%(len(id_publik)),end='')
+
+							except KeyboardInterrupt:
+								print('\rSucces Dump %s User '%(len(id_publik)))
+								print('\nFile Save In DATA/result/%s.txt'%(target_id))
+								return False
+
 							except:pass
+
+					except KeyboardInterrupt:
+						print('\rSucces Dump %s User '%(len(id_publik)))
+						print('\nFile Save In DATA/result/%s.txt'%(target_id))
+						return False
+
 					except:
 						pass
 
-			print('\nSucces Dump Id, File Save In DATA/result/%s.txt'%(target_id))
+			print('\nFile Save In DATA/result/%s.txt'%(target_id))
+
 		except requests.ConnectionError:
 			print('No Internet Connection !');exit()
 
