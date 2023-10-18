@@ -155,7 +155,7 @@ class dump:
 				try:
 					user_id, user_name = x['id'], x['name']
 					id_publik.append(user_id)
-					open('DATA/result/%s.text'%(target_id),'a').write(user_id+'|'+user_name+'\n')
+					open('DATA/result/%s.txt'%(target_id),'a').write(user_id+'|'+user_name+'\n')
 					print('\rSucces Dump %s User '%(len(id_publik)),end='')
 				except:pass
 			if type_dump in ['y','1']:
@@ -169,7 +169,7 @@ class dump:
 								else:
 									user_id, user_name = x['id'], x['name']
 									id_publik.append(user_id)
-									open('DATA/result/%s.text'%(target_id),'a').write(user_id+'|'+user_name+'\n')
+									open('DATA/result/%s.txt'%(target_id),'a').write(user_id+'|'+user_name+'\n')
 									print('\rSucces Dump %s User '%(len(id_publik)),end='')
 
 							except KeyboardInterrupt:
@@ -205,7 +205,7 @@ class dump:
 				try:
 					user_id, user_name = x['id'], x['name']
 					data.append(user_id+'|'+user_name)
-					open('DATA/result/%s.text'%(target_id),'a').write(user_id+'|'+user_name+'\n')
+					open('DATA/result/%s.txt'%(target_id),'a').write(user_id+'|'+user_name+'\n')
 					print('\rSucces Dump %s User '%(len(data)),end='')
 				except:pass
 			print('\nSucces Dump Id, File Save In DATA/result/%s.txt'%(target_id))
