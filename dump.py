@@ -9,6 +9,7 @@ import re
 import sys
 import time
 import json
+import random
 import requests
 from datetime import datetime
 from bs4 import BeautifulSoup as bs
@@ -16,6 +17,7 @@ from bs4 import BeautifulSoup as bs
 
 # --> CallBack
 id_member = []
+id_publik = []
 times = datetime.now()
 name_file = '%s-%s-%s.txt'%(times.hour,times.month,times.year) 
 
@@ -146,15 +148,33 @@ class dump:
 	def friends(self):
 		try:
 			target_id = input('Input Id Target : ')
+			type_dump = input('Infinity Dump !, y/t ? : ')
 			get = requests.get('https://graph.facebook.com/%s?fields=friends&access_token=%s'%(target_id, self.token_eaat), cookies=self.cookie).json()
-			data = []
 			for x in get['friends']['data']:
 				try:
 					user_id, user_name = x['id'], x['name']
-					data.append(user_id+'|'+user_name)
+					id_publik.append(user_id)
 					open('DATA/result/%s.text'%(target_id),'a').write(user_id+'|'+user_name+'\n')
-					print('\rSucces Dump %s User '%(len(data)),end='')
+					print('\rSucces Dump %s User '%(len(id_publik)),end='')
 				except:pass
+
+			if type_dump in ['y','1']:
+				while True:
+					try:
+						get1 = requests.get('https://graph.facebook.com/%s?fields=friends&access_token=%s'%(random.choice(id_publik), self.token_eaat), cookies=self.cookie).json()
+						for x in get1['friends']['data']:
+							try:
+								if x['id'] in id_publik:
+									pass
+								else:
+									user_id, user_name = x['id'], x['name']
+									id_publik.append(user_id)
+									open('DATA/result/%s.text'%(target_id),'a').write(user_id+'|'+user_name+'\n')
+									print('\rSucces Dump %s User '%(len(id_publik)),end='')
+							except:pass
+					except:
+						pass
+
 			print('\nSucces Dump Id, File Save In DATA/result/%s.txt'%(target_id))
 		except requests.ConnectionError:
 			print('No Internet Connection !');exit()
