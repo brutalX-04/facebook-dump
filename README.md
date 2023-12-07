@@ -1,7 +1,7 @@
 # :snake: Facebook-dumps-friends
 - Termux-Installations
 ```python
-pkg update && pkg upgrade
+pkg update && pkg upgrade -y
 pkg install python
 pip install requests
 pip install bs4
