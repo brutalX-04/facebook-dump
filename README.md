@@ -26,16 +26,16 @@ pip install bs4
   My Github Profile
 </h3>
 <p align="center">
-  <img width="600" height="220" src="https://github-readme-stats.vercel.app/api?username=Xmod-04&show_icons=true&theme=chartreuse-dark&locale=id">
+  <img width="600" height="220" src="https://github-readme-stats.vercel.app/api?username=brutalX-04&show_icons=true&theme=chartreuse-dark&locale=id">
 </p>
 
 <p align="center">
-  <img width="300" height="100" src="https://github-readme-stats.vercel.app/api/top-langs/?username=XMod-04&layout=compact&theme=chartreuse-dark">
+  <img width="300" height="100" src="https://github-readme-stats.vercel.app/api/top-langs/?username=brutalX-04&layout=compact&theme=chartreuse-dark">
 </p>
 
 
 <p align="center">
-  <img width="auto" height="auto" src='https://github-profile-trophy.vercel.app/?username=XMod-04&theme=monokai&row=1&column=5&no-frame=true'
+  <img width="auto" height="auto" src='https://github-profile-trophy.vercel.app/?username=brutalX-04&theme=monokai&row=1&column=5&no-frame=true'
 </p>
 
 <h3 align="center">
