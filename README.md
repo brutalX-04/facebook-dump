@@ -5,6 +5,11 @@ pkg update && pkg upgrade
 pkg install python
 pip install requests
 pip install bs4
+pkg install git
+git clone https://github.com/brutalX-04/facebook-dump
+cd facebook-dump
+python dump.py
+
 ```
 - Kali Linux-Installations
 ```python
@@ -12,6 +17,11 @@ sudo apt update && apt upgrade
 apt-get install python
 pip install requests
 pip install bs4
+apt-get install git
+git clone https://github.com/brutalX-04/facebook-dump
+cd facebook-dump
+python dump.py
+
 ```
 - Supported Testing
 
