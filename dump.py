@@ -85,18 +85,18 @@ def login():
 		cookie = input('Input Cookie : ')
 		with requests.Session() as rsn:
 			rsn.headers.update({
-                'Accept-Language': 'id,en;q=0.9',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
-                'Referer': 'https://www.instagram.com/',
-                'Host': 'www.facebook.com',
-                'Sec-Fetch-Mode': 'cors',
-                'Accept': '*/*',
-                'Connection': 'keep-alive',
-                'Sec-Fetch-Site': 'cross-site',
-                'Sec-Fetch-Dest': 'empty',
-                'Origin': 'https://www.instagram.com',
-                'Accept-Encoding': 'gzip, deflate',
-            })
+				'Accept-Language': 'id,en;q=0.9',
+				'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
+				'Referer': 'https://www.instagram.com/',
+				'Host': 'www.facebook.com',
+				'Sec-Fetch-Mode': 'cors',
+				'Accept': '*/*',
+				'Connection': 'keep-alive',
+				'Sec-Fetch-Site': 'cross-site',
+				'Sec-Fetch-Dest': 'empty',
+				'Origin': 'https://www.instagram.com',
+				'Accept-Encoding': 'gzip, deflate'
+			})
 			response = rsn.get('https://www.facebook.com/x/oauth/status?client_id=124024574287414&wants_cookie_data=true&origin=1&input_token=&sdk=joey&redirect_uri=https://www.instagram.com/brutalid_/', cookies={'cookie': cookie})
 			if '"access_token":' in str(response.headers):
 				token = re.search('"access_token":"(.*?)"', str(response.headers)).group(1)
@@ -133,10 +133,13 @@ def dump():
 		for x in target:
 			get = requests.get('https://graph.facebook.com/%s?fields=friends&access_token=%s'%(x, token), cookies={'cookie': cookie}).json()
 			for x in get['friends']['data']:
-				user_id, user_name = x['id'], x['name']
-				open('DATA/dump/%s.txt'%(name),'a').write(user_id+'|'+user_name+'\n')
-				print('\rSucces Dump %s%s%s User '%(h, idd, p),end='')
-				idd+=1
+				try:
+					user_id, user_name = x['id'], x['name']
+					open('DATA/dump/%s.txt'%(name),'a').write(user_id+'|'+user_name+'\n')
+					print('\rSucces Dump %s%s%s User '%(h, idd, p),end='')
+					idd+=1
+				except:
+					pass
 
 		print('\n\nFile Save In %sDATA/dump/%s.txt%s'%(h,name,p))
 
