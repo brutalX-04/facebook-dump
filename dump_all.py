@@ -77,7 +77,7 @@ class getToken:
 			return token
 
 		except Exception as e:
-			raise e
+			print('Failled dump')
 
 
 
