@@ -12,6 +12,8 @@ import requests
 # --> Callback
 cok    = ''
 target = ''
+token  = ''
+datas  = []
 
 
 # --> Default Headers
@@ -55,7 +57,32 @@ def getData(res):
     return data
 
 
-# --> All dump with graphql
+# --> class get token EAAB
+class getToken:
+
+	# --> Get token EABB
+	def Eaab(cookie):
+		try:
+			headers = defaultHeaders
+			headers.update({
+				'authority': 'adsmanager.facebook.com',
+				'sec-fetch-site': 'none'
+			})
+
+			get   = requests.get('https://adsmanager.facebook.com/adsmanager/', headers=headers, cookies={'cookie': cookie}).text
+			url   = re.search('window.location.replace\("(.*?)"', get).group(1).replace('\\','')
+			get1  = requests.get(url, headers=headers, cookies={'cookie': cookie}).text
+			token = re.search('__accessToken="(.*?)"', get1).group(1)
+
+			return token
+
+		except Exception as e:
+			raise e
+
+
+
+
+# --> class all dump with graphql
 class dumpGraphql:
 
 	# --> Dump friends
@@ -72,16 +99,19 @@ class dumpGraphql:
 			end_cursor    = node['page_info']['end_cursor']
 			id_cursor     = re.search('"nav_collections":{"nodes":\[{"id":"(.*?)"', get).group(1)
 
-			print(count_friends)
+			print('Count Friends :', count_friends)
 			for x in node['edges']:
 				name = x['node']['title']['text']
 				ids  = x['node']['node']['id']
-				print(ids,name)
+				datas.append(ids+'|'+name)
+				print('\rSucces get %s friends  '%(len(datas)), end='')
 			
 			dumpGraphql.nextFriends(cookie, target , end_cursor, id_cursor, get)
 
+			return datas
+
 		except Exception as e:
-			raise e
+			print('Failled dump')
 
 	# --> Next dump friends with graphql
 	def nextFriends(cookie, target , end_cursor, id_cursor, res):
@@ -113,17 +143,18 @@ class dumpGraphql:
 			for x in post['data']['node']['pageItems']['edges']:
 				name = x['node']['title']['text']
 				ids  = x['node']['node']['id']
-				print(ids,name)
+				datas.append(ids+'|'+name)
+				print('\rSucces get %s friends  '%(len(datas)), end='')
 
 			try:
 				end_cursor = post['data']['node']['pageItems']['page_info']['end_cursor']
 				dumpGraphql.nextFriends(cookie, target , end_cursor, id_cursor, res)
 
 			except Exception as e:
-				print('Succes dump all friends')
+				print('\nSucces dump all friends')
 
 		except Exception as e:
-			raise e
+			pass
 
 
 	# --> Dump followers
@@ -144,12 +175,15 @@ class dumpGraphql:
 			for x in node['edges']:
 				name = x['node']['title']['text']
 				ids  = x['node']['node']['id']
-				print(ids,name)
+				datas.append(ids+'|'+name)
+				print('\rSucces get %s friends  '%(len(datas)), end='')
 			
 			dumpGraphql.nextFollowers(cookie, target , end_cursor, id_cursor, get)
 
+			return datas
+
 		except Exception as e:
-			raise e
+			print('Failled dump')
 
 	# --> Next dump followers with graphql
 	def nextFollowers(cookie, target , end_cursor, id_cursor, res):
@@ -181,17 +215,18 @@ class dumpGraphql:
 			for x in post['data']['node']['pageItems']['edges']:
 				name = x['node']['title']['text']
 				ids  = x['node']['node']['id']
-				print(ids,name)
+				datas.append(ids+'|'+name)
+				print('\rSucces get %s friends  '%(len(datas)), end='')
 
 			try:
 				end_cursor = post['data']['node']['pageItems']['page_info']['end_cursor']
 				dumpGraphql.nextFollowers(cookie, target , end_cursor, id_cursor, res)
 
 			except Exception as e:
-				print('Succes dump all followers')
+				print('\nSucces dump all followers')
 
 		except Exception as e:
-			raise e
+			pass
 
 
 	# --> Dump Member groups
@@ -209,12 +244,16 @@ class dumpGraphql:
 			for x in node['edges']:
 				name = x['node']['name']
 				ids  = x['node']['id']
-				print(ids,name)
+				datas.append(ids+'|'+name)
+				print('\rSucces get %s friends  '%(len(datas)), end='')
 			
 			dumpGraphql.nextMembers(cookie, target , end_cursor, get)
 
+			return datas
+
 		except Exception as e:
-			raise e
+			print('Failled dump')
+
 
 	# --> Next dump members with graphql
 	def nextMembers(cookie, target , end_cursor, res):
@@ -246,20 +285,83 @@ class dumpGraphql:
 			for x in post['data']['node']['new_members']['edges']:
 				name = x['node']['name']
 				ids  = x['node']['id']
-				print(ids,name)
+				datas.append(ids+'|'+name)
+				print('\rSucces get %s friends  '%(len(datas)), end='')
 
 			try:
 				end_cursor = post['data']['node']['new_members']['page_info']['end_cursor']
 				dumpGraphql.nextMembers(cookie, target , end_cursor, res)
 
 			except Exception as e:
-				print('Succes dump all members')
+				print('\nSucces dump all members')
 
 		except Exception as e:
-			raise e
+			pass
 
+
+# --> class dump with graph
+class dumpGraph:
+
+	# --> Dump friendlist
+	def Friends(cookie, token, target):
+		try:
+			params = {
+				"access_token": token,
+				"fields": "friends.fields(id,name)",
+			}
+
+			get = requests.get(f"https://graph.facebook.com/v18.0/{target}", params=params, cookies={'cookie':cookie}).json()
+
+			data = get['friends']['data']
+			for x in data:
+				name = x['name']
+				ids  = x['id']
+				datas.append(ids+'|'+name)
+				print('\rSucces get %s friends  '%(len(datas)), end='')
+
+			try:
+				after = get['friends']['paging']['cursors']['after']
+				dumpGraph.nextFriends(cookie, token, after, target)
+
+				return datas
+
+			except:
+				print('\nSucces dump all friends')
+				return datas
+
+		except Exception as e:
+			print('Failled dump')
+
+
+	# --> Next dump friendlist
+	def nextFriends(cookie, token, after, target):
+		try:
+			params = {
+				"access_token": token,
+				"fields": f"friends.fields(id,name).after({after})",
+			}
+
+			get = requests.get(f"https://graph.facebook.com/v18.0/{target}", params=params, cookies={'cookie':cookie}).json()
+
+			data = get['friends']['data']
+			for x in data:
+				name = x['name']
+				ids  = x['id']
+				datas.append(ids+'|'+name)
+				print('\rSucces get %s friends  '%(len(datas)), end='')
+
+			try:
+				after = get['friends']['paging']['cursors']['after']
+				dumpGraph.nextFriends(cookie, token, after, target)
+
+			except:
+				print('\nSucces dump all friends')
+
+		except Exception as e:
+			pass
 
 
 # dumpGraphql.Friends(cok, target)
 # dumpGraphql.Followers(cok, target)
 # dumpGraphql.Member(cok, target)
+# dumpGraph.Friends(cok, token, target)
